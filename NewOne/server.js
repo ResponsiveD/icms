@@ -70,62 +70,142 @@
 // and this is async wrapper 46 client also going to create server not going to client in this vids
 // as a client  u can use any little netcat or telnet
 
+// const net = require('net');
+// const socketUtil = require("./socketutil")
+
+// const tcpServer = net.createServer(function (socket) {
+//     // create server create one tcp server u can give some options like allow half-open of anything in the first arguments but i'm not 
+//     // we will give just one listener that one going to tcp connect, tcp server is duplex stream, so u can write on the socket so u can read it
+//     // read/write any data on this socket it goes to the client when u read it basically read from the client 
+//     // so this is a async model creating the server and waiting for the client req or the client connection 
+//     // server will get any connection this call back function will be executed, so this is connection listener or callback
+//     console.log('connection established....');
+//     socketUtil.socketAddress(socket)
+//     // nc -p 6000 localhost random port
+//     // this inherit from event emitter, the tcp socket also event emitter, and emit any event like once the socket is ended,closed,distroyed, those cases it will listen for a particular event when
+//     // when get any data, it will listen for any data event, lets write one listener for data  
+
+//     // 4. get connection defined on tcp connection, using this method u can get num of connection
+//     // tcp connection invoke bcz this connection has been invoke the callback 
+//     // this is not prop, one method, we need to one callback method bcz this is async 
+//     // 1. error obj
+//     // 2. count
+//     tcpServer.getConnections(function (error, count) {
+//         console.log("connection like num of concurrent conn or TCP"+count);
+//         // nc localhost 3394 // client connection
+//         // so this is very simple utility function to monitor the connection
+//     })
+//     socket.on("end", function () {
+//         socketUtil.socketStats(socket);
+//         // once this client disconnected it will be return
+//         // on data will take arguments string or buffer,
+//         console.log('Server disconnected....')
+//     })
+//     socket.on("close", function () {
+//         // on data will take arguments string or buffer,
+//         console.log('Close Event')
+//     })
+//     // an on is very much similar to browser add event listerner, this is short cut of adding event listener
+//     socket.on("data", function (data) {
+//         // set encoding by default this is utf-8 
+//         console.log("data reci from the tcp client");
+//         var flused = socket.write('Server Reply: '+data);
+//         // any data to the socket or u are write it any data to the client, v are sending data to the client first it goes 
+//         // to the buffer form the user spce to the kernal buffer, 
+//         console.log(flused);
+//         // this is writing on this socket u are reading any data here u have treating as readable stream 
+//         // treating as writable stream 
+//         socket.write("Server Reply: "+ data);
+//         socketUtil.socketStats(socket);
+//         // 5. it can instance of event emitter also emit an event 
+//         // socket.emit('error', new Error('forcefully emitter...'))
+//         // this eror event is not handle 
+//     });
+//     // 5. error event handle by here 
+//     socket.on("error", function (error) {
+//         console.log("something wrong happen here"+ error);
+//         // socket.end(`Socket sends somemore data...`);
+//         // it sends one fin packets, i want connection whould be closed, it might be some io activity i might be send some pending data or pending packets or it recive something 
+//         // trying to end sockets and completely distroyed this close event will be fired
+//         socket.destroy();
+//         // destroy won't make any activity any destroy it won't send any data
+//     }) 
+//     tcpServer.maxConnections = 10; 
+//     // can restrict num of tcp client
+//     // after 30s if there is no i/o activity or no data transfer b/w client server this will emit time out server but it will not destroy in your socket
+
+//     // socket.setTimeout(30000, function(){
+//     //     socket.end(`disconnecting client...`);
+//     // })
+//     socket.on('timeout', function () {
+//         socket.end(`disconnecting client...`);
+//     })
+// });
+// //func set callback after time duration this function will be invoked 
+// setTimeout(function () {
+//     tcpServer.close(function () {
+//         console.log('server closed')
+//         // closed on the socket not on the server, the server is still alive
+//         // close any new connection or existing connection still be open, one more this all existing connection destroyed or killed 
+//         // 3 client after one minutes it will not accept any connection, close event on the socket not on the server server still alive
+//         // after close the client server atomatically closed
+//     })
+// }, 68000);
+// // Alt way to close connection
+// tcpServer.on('close', function () {
+//     console.log('server closed')
+//     // this is also listener for close list on the server
+// })
+
+// tcpServer.on('close', function () {
+//     console.log('Second close event handler!...');
+// })
+// tcpServer.listen(function(){
+//     // random port
+//     var port = tcpServer.address().port;
+//     console.log('Server started listening port: ' + port);
+// })
+
+
 const net = require('net');
 const socketUtil = require("./socketutil")
 
-const tcpServer = net.createServer(function (socket) {
-    // create server create one tcp server u can give some options like allow half-open of anything in the first arguments but i'm not 
-    // we will give just one listener that one going to tcp connect, tcp server is duplex stream, so u can write on the socket so u can read it
-    // read/write any data on this socket it goes to the client when u read it basically read from the client 
-    // so this is a async model creating the server and waiting for the client req or the client connection 
-    // server will get any connection this call back function will be executed, so this is connection listener or callback
+// so for any tcp connection in the server this conn will be invoke 
+const tcpServer = net.createServer({allowHalfOpen: fasle});
+// the meaning of the connection  req to client, packet server tcp server on the port so conn fired
+// requesting for connection termination by sending fin packet so server will also send the fin packet and the connection will be terminated ok so let's see this
+// true that mean server will not res on fin packets
+tcpServer.on('connetion', function (socket) {
     console.log('connection established....');
     socketUtil.socketAddress(socket)
-    // this inherit from event emitter, the tcp socket also event emitter, and emit any event like once the socket is ended,closed,distroyed, those cases it will listen for a particular event when
-    // when get any data, it will listen for any data event, lets write one listener for data  
-
-    // 4. get connection defined on tcp connection, using this method u can get num of connection
-    // tcp connection invoke bcz this connection has been invoke the callback 
-    // this is not prop, one method, we need to one callback method bcz this is async 
-    // 1. error obj
-    // 2. count
     tcpServer.getConnections(function (error, count) {
         console.log("connection like num of concurrent conn or TCP"+count);
-        // nc localhost 3394 // client connection
-        // so this is very simple utility function to monitor the connection
     })
     socket.on("end", function () {
-        // on data will take arguments string or buffer,
-        console.log('Server disconnected....')
+        socketUtil.socketStats(socket);
+       console.log('Server disconnected....')
     })
-    // an on is very much similar to browser add event listerner, this is short cut of adding event listener
+    socket.on("close", function () {
+        console.log('Close Event')
+    })
     socket.on("data", function (data) {
-        // set encoding by default this is utf-8 
         console.log("data reci from the tcp client");
-        // this is writing on this socket u are reading any data here u have treating as readable stream 
-        // treating as writable stream 
+        var flused = socket.write('Server Reply: '+data);
+        console.log(flused);
         socket.write("Server Reply: "+ data);
-        // 5. it can instance of event emitter also emit an event 
-        // socket.emit('error', new Error('forcefully emitter...'))
-        // this eror event is not handle 
+        socketUtil.socketStats(socket);
     });
-    // 5. error event handle by here 
     socket.on("error", function (error) {
         console.log("something wrong happen here"+ error);
-        // socket.end(`Socket sends somemore data...`);
         socket.destroy();
-        // destroy won't make any activity any destroy it won't send any data
     }) 
-    tcpServer.maxConnections = 1; 
-    // can restrict num of tcp client 
-});
-//func set callback after time duration this function will be invoked 
-setTimeout(function () {
-    tcpServer.close(function () {
-        console.log('server closed')
-        // closed on the socket not on the server, the server is still alive
+    tcpServer.maxConnections = 10; 
+    socket.on('timeout', function () {
+        socket.end(`disconnecting client...`);
     })
-}, 68000)
+});
+
+
 tcpServer.on('close', function () {
     console.log('Second close event handler!...');
 })
