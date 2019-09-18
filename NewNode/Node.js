@@ -1,3 +1,7 @@
+// sagalakala321@outlook.com
+// sagalakala-saga-32
+// SHANTHI@agi
+
 // Node is as an async event driven js runtime, node is designed to build scalable net app.
 // where is node.js commonly found?
 // Microservice and apis, make a how code is action
@@ -380,12 +384,49 @@ const intervalId = setInterval(() =>{
 // command custm env variables, ex we can do something like VAL1=10 VAL2=20, note
 // we can access the value in enviroinment vars using the process 
 // we will see later this one "process Object"
+// console.log("Current user is"+process.env.USER)
+// console.log("\nScript executed with: ")
+// console.log("VAL1 equalt to:"+process.env.VAL1)
+// console.log("VAL1 equalt to:"+process.env.VAL2)
+// in the node script access the value in env varibales using the process object which has many properties but one day we use purpose end property available through the os, like user here, it also includes the one we just customized, like val1 and val2. u can export env varis prior to exe the script and node will read those as well. 
+
+// this is handy bridge bw the operating system and the node process. u can use it to communicate dynamic config values. 
+// Ex script to run on dev port 4242, but production run on 80 instead, u can use process.env to make the port dynamic and control it on the diff machines 
+// alt way node process process.argv have items for every positional argument u specify when executing the node script in order. for 
+ // node -p "process.argv" hello 42
+// [ 'C:\\Program Files\\nodejs\\node.exe', 'hello', '42' ]
+// another props standards are 
+// stdin, stdout, stderr, these process node communication bw node process and os execution environment. 
+//  console.log("hello");
+// hello
+// undefined
+// > process.stdout.write("hello\n");
+// hello
+// true
+// > std input, to read the information
+
+// process.stdin.on('readable', () => {
+// 	const chunk = process.stdin.read();
+// 	if(chunk !== null) process.stdout.write(chunk);
+// })
+// just use the events and method to use this streams, in here we are using the readable event and here using it to read a chunck of data, and then we print, same to stdout
+
+// process.stdin.pipe(process.stdout)
+
+setTimeout(() => process.exit(), 2000);
+
+process.on('exit', () => {
+	console.log("Process will exit now. See you later!");
+})
+console.log('Hello!')
+// write before node exits, it will print out the message. coz of nature async code in node, this hello line execute first fire. coz event base methodology.
+
 
 // JS is a diff language Ecma script which is offical specification JS
-// we will see later this one "ECMA"
+// ecma script tech communitee known as TC39, makes yearly releases of ECMA  and JS engines, like follow as new features introduced in the ECMAScript 
 
 // var vs block scope
-
+// these are nested block scope 
 > {{{}}}
 undefined
 > {{{ var a=42 }}}
@@ -402,7 +443,7 @@ if(true) {
 }
 
 for (var i = 1 - 1; i >= 0; i--) {
-	// block scop
+	// block scop, we can access the var in outside this is y use let key
 };
 
 function sum(a, b){
@@ -412,10 +453,21 @@ function sum(a, b){
 };
 
 sun(4+3)
+// block scopes are diff then function scopes 
+// there is no leak out the function if u can access that outside of the scope u cant, if u access the block scope outside is a bit problematic. 
+
+// we use const ref assigned is meant to be constant coz ref assigned with const cannot be changed but not values here, const does not mean immutability, it just means constant ref, but if the ref is for an obj, we can still change this obj, just like we can do with functions that receive objs as arguments. So if the 
+
+// Scalar values
+const answer = 42;
+const greeting = "Hello";
+
+
 
 // little bit weird.
-// arrow function more predictably with closures.
+// arrow function behaves more predictably with closures. arrow function does not care about call it, while regular func cares very much about that. 
 
+// X always bind the value like this keyword for its caller, and if it didn't have an explicit caller regular use a value of undefined for its this keyword. An arrow function, on the other hand, like Y here, not caring about who called it, will close over the value for the this keyword for its scope at the time it was defined, making it great for delayed exe cases like events and listeners coz it gives easy access to the defining env.
 const X = func() {
 	// "this" here is the caller of X
 }
@@ -425,7 +477,105 @@ const Y = () => {
 	// its the same "this" found in Y's scope
 }
 
-// will see Modern JS pluralsight
+// "this" here is "exports"
+
+this.id = 'exports';
+
+// console.log(this);
+
+
+const testObj = {
+	func1: function() {
+		console.log('func1 :', this);
+	},
+	func2: () => {
+		console.log('func2 :', this);
+	},
+}
+testObj.func1()
+testObj.func2()
+// this is the big benefits working with listeners an nodejs
+
+// Object Literals
+const mistery1 = 'answer';
+const PI = Math.PI;
+const obj1 = {
+	p1: 10,
+	p2: 20,
+	f1() {},
+	f2: () => {},
+	[mistery1]: 42,
+	PI
+}
+
+obj.mistery
+// coz it is dynamic syntax, obj are very popular in js they are use manage and communicate data, and using these features will make the code a bit shorter and easier to read.
+
+// Destructuring works both arrays and objs 
+
+// const PI = Math.PI;
+// const E = Math.E;
+// const SQRT2 = Math.SQRT2;
+
+const { PI, E, SQRT2 } = Math;
+
+// also works inside function arguments 
+
+const circle = {
+	label: 'circleX',
+	radius: 2,
+}
+
+const circleArea = ({ radius }) => (PI * radius * radius).toFixed(2);
+// it generally use readablity of function, it accept object as its arguments
+console.log(
+	circleArea(circle)
+)
+
+const [first, ...restOfItems] = [10, 20, 30, 40];
+
+const data = {
+	temp1: '001',
+	temp2: '002',
+	firstName: 'John',
+	lastName: 'Doe'
+};
+
+const { temp1, temp2, ...person } = data;
+
+const newArray = [...restOfItems]
+
+const newObject = {
+	...person,
+	newArray
+}
+
+// Most of the function that you'll be working with in Node return promises, and you'll have to consume them using the promise syntax with .then and .catch. however, a more preferable way to consume promises is using the new async/await syntax, which make promise makes your code bit more readable easier especially u start dealing with loops and other complexities.
+
+const https = require('https');
+
+function fetch (url) {
+	return new Promise((resolve, reject) => {
+			https.get(url, (res) => {
+				let data = '';
+				res.on('data', (rd) => data = data + rd);
+				res.on('end', () => resolve(data));
+				res.on('error', reject);
+			});
+		})
+}
+
+// fetch('https://www.javascript.com/')
+// 	.then(data => {
+// 		console.log(data.length);
+// 		// which will expose the data after the async action.
+// 	})
+
+// alt u can promise using the async/await feature as seen here. We use the keyword await before the promise and that will give us access to the data available after the async action. We can use this data directly which is a lot simpler than callbacks and using. then as well. However, to make this await feature work, u have to wrap ur code with a function labeled with the async keyword and then call the function to exe the aync action. Testing this code now, the same fetch promise 
+(async function read() {
+	const data = await fetch('https://www.javascript.com/');
+	console.log(data.length)
+})();
 
 // why NPM?
 // developers to do three main things, 
@@ -435,6 +585,11 @@ const Y = () => {
 
 // code sharing, composability, team work, versions
 // see later npm code
+
+
+
+
+
 
 // In this module, concurrency
 // Require module using require objects
@@ -515,6 +670,10 @@ dynamicArgsFunction(2,3,4,5);
   // arguments inside of any file, the wrapping func also internally return something. And the thing return module. exports prop. This is what that built-in wrapper function return by default, all the time, for every file it will return module.exports And 'module' here is just node always ret the module, the export obj here is just an alias for module.export node invoke the wrapper function it simply exports the module. exports here as the value of the first arg. This is why we can use the exports keyword itself to export a new popr on the api
 
   // Node has started on OS process, and finish the process os terminate the pro node proc not keep running in background unless it has a reason to not really node process a reason to continue running. Let's now give the proc reason to continue running we can do so by starting an internal timer. 
+
+  // Global Object's
+  // if Defining variable in the top level its not global one yes u should avoid doing taht 
+  // console.log(global, { depth: 0 })
 
   // Event Loop
   // What Node uses to process async actions and interface them for you so that don't have to deal with threads
@@ -617,8 +776,54 @@ async function main(){
 main();
 console.log('TEST');
 
-// able to consume this promise using aa features. u can 
+// able to consume this promise using a/a features. u can promisify any async action that's depend according to code that ideamatic callback pattern,
+// node also shift first level support arguments support for promises in some modules as well. This fs module is one of them. u don't really need to use the promisify func here, u can just use the native promises returned by the fs module itself. 
+const { readFile } = require('fs').promises;
+// by doing so u can get promise based read file out of the box, and u can consume it with the async/await as we did before. How cool is that. This is the near future of all od Node's APIs. Promises are better then callbacks The code is easier to read here and promise open the door to so much flexibility to nest operation and evet loop over them. 
 
-// sagalakala321@outlook.com
-// sagalakala-saga-32
-// SHANTHI@agi
+
+const fs = require('fs').promises;
+
+async function main () {
+	const data = await fs.readFile(__filename);
+	await fs.writeFile(__filename+'.copy', data);
+}
+// this wait on read file and write file, just wait line by line there is no nesting going on here that whould make code lot deal with
+main()
+console.log('TEST!!')
+
+// Event Emitter
+// and its important one so let's talk about in it 
+// so most of the event module implement the EE module. EX streams, Node are EE the stdin stdout both event emitter as well after requireing the event emitter class we create EE obj, let me put it in My emitter the new keyword on the EventEmitter class 
+
+const EventEmitter = require('events');
+// MyEvent to emitting events 
+const MyEvent = new EventEmitter();
+// An event emitting object has many methods, but here are the 2 most important ones. u can emit a string, This string is a name that can be anything and u can use it to identify a certain event. So let's emit a TEST_EVENT string here. Now, the other method on any emitter whether u can subscribe emitted by this object, and u do that using .on method. You say myEmitter.on this TEST_EVENT string, and then you callback as a second arg.
+setImmediate(() => {
+	MyEvent.emit('TEST_EVENT')
+})
+
+MyEvent.on('TEST_EVENT', () => {
+	// The myEmitter object will invoke the callback function every time the event represented by this string is fired 
+	console.log('TEST_EVENT was fired')
+})
+
+MyEvent.on('TEST_EVENT', () => {
+	console.log('TEST_EVENT was fired')
+})
+
+MyEvent.on('TEST_EVENT', () => {
+	console.log('TEST_EVENT was fired')
+})
+
+// MyEvent.emit('TEST_EVENT')
+
+// .on method in multiple this gives flexibilty of behaviors in diff functions in res to a single event. zero o/p we subsribe 3 times the subscribe will not fired here it was emitted once before emitted once before we subscribed, but no one was listening at the point. If u emit the event after subs u should now see the 3 callbacks executed 
+
+// --- q2 if don't emit event after the subscription that I just did, and I just keep this line here, what can i emit to make the subscribers callbacks that happened after it, without moving it to after the subscribe calls?
+// I can use the Event Loop, I can delay the exe of this line to the next tick of the event loop by using a simple setimmediate call, for ex 
+// So  these subs calls will happen before the emit call in the case and we see the "TEST_EVENT" was fired message this is event emitting very simple and very powerful because it allows for modules to work together without depending on any apis. 
+
+
+
